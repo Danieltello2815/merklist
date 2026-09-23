@@ -9,7 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ProductoRepository {
     private static final String URL = "jdbc:mysql://localhost:3306/merklist";
     private static final String USUARIO = "merklist_user";
