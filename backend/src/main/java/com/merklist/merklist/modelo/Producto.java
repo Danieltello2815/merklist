@@ -7,14 +7,7 @@ public class Producto {
     private String marca;
     private int tipoProductoId;
 
-    public Producto (){
-    }
-
-    public Producto(int id, String nombre,String marca, int tipoProductoId){
-        this.id = id;
-        this.nombre = nombre;
-        this.marca = marca;
-        this.tipoProductoId = tipoProductoId;
+    public Producto() {
     }
 
     public int getId() {
