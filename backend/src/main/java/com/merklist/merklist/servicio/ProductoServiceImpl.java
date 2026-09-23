@@ -2,6 +2,7 @@ package com.merklist.merklist.servicio;
 
 import com.merklist.merklist.modelo.Producto;
 import com.merklist.merklist.repositorio.ProductoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,7 +10,8 @@ import java.util.List;
 @Service
 public class ProductoServiceImpl implements ProductoService{
 
-    private final ProductoRepository productoRepository = new ProductoRepository();
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @Override
     public List<Producto> listar() {
