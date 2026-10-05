@@ -17,6 +17,11 @@ public class ManejadorExcepciones {
         return construir(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(RecursoDuplicadoException.class)
+    public ResponseEntity<Map<String, Object>> duplicado(RecursoDuplicadoException e) {
+        return construir(HttpStatus.CONFLICT, e.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> solicitudInvalida(IllegalArgumentException e) {
         return construir(HttpStatus.BAD_REQUEST, e.getMessage());
