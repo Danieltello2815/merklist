@@ -22,6 +22,11 @@ public class ManejadorExcepciones {
         return construir(HttpStatus.CONFLICT, e.getMessage());
     }
 
+    @ExceptionHandler(OperacionNoPermitidaException.class)
+    public ResponseEntity<Map<String, Object>> operacionNoPermitida(OperacionNoPermitidaException e) {
+        return construir(HttpStatus.CONFLICT, e.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> solicitudInvalida(IllegalArgumentException e) {
         return construir(HttpStatus.BAD_REQUEST, e.getMessage());

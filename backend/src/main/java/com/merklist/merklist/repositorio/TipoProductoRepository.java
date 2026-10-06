@@ -12,6 +12,8 @@ public interface TipoProductoRepository {
 
     boolean existePorNombre(String nombre);
 
+    boolean tieneProductosAsociados(int id);
+
     TipoProducto crear(TipoProducto tipoProducto);
 
     TipoProducto actualizar(int id, TipoProducto tipoProducto);
