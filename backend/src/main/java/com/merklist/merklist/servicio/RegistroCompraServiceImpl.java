@@ -2,18 +2,23 @@ package com.merklist.merklist.servicio;
 
 import com.merklist.merklist.excepcion.RecursoNoEncontradoException;
 import com.merklist.merklist.modelo.RegistroCompra;
+import com.merklist.merklist.repositorio.ProductoRepository;
 import com.merklist.merklist.repositorio.RegistroCompraRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class RegistroCompraServiceImpl implements RegistroCompraService {
 
     private final RegistroCompraRepository registroCompraRepository;
+    private final ProductoRepository productoRepository;
 
-    public RegistroCompraServiceImpl(RegistroCompraRepository registroCompraRepository) {
+    public RegistroCompraServiceImpl(RegistroCompraRepository registroCompraRepository,
+                                     ProductoRepository productoRepository) {
         this.registroCompraRepository = registroCompraRepository;
+        this.productoRepository = productoRepository;
     }
 
     @Override
@@ -37,18 +42,20 @@ public class RegistroCompraServiceImpl implements RegistroCompraService {
 
     @Override
     public RegistroCompra crear(RegistroCompra registroCompra) {
-        if (registroCompra.getPrecio() <= 0) {
-            throw new IllegalArgumentException("El precio del registro de compra debe ser mayor a cero");
+        if (registroCompra.getFecha() == null) {
+            registroCompra.setFecha(LocalDate.now());
         }
+        validar(registroCompra);
         return registroCompraRepository.crear(registroCompra);
     }
 
     @Override
     public RegistroCompra actualizar(int id, RegistroCompra registroCompra) {
-        obtenerPorId(id);
-        if (registroCompra.getPrecio() <= 0) {
-            throw new IllegalArgumentException("El precio debe ser mayor a cero");
+        RegistroCompra actual = obtenerPorId(id); // lanza 404 si no existe
+        if (registroCompra.getFecha() == null) {
+            registroCompra.setFecha(actual.getFecha()); // conserva la fecha original
         }
+        validar(registroCompra);
         return registroCompraRepository.actualizar(id, registroCompra);
     }
 
@@ -60,6 +67,10 @@ public class RegistroCompraServiceImpl implements RegistroCompraService {
 
     @Override
     public double calcularVariacionPrecio(int productoId) {
+        if (productoRepository.obtenerPorId(productoId) == null) {
+            throw new RecursoNoEncontradoException("No existe un producto con id " + productoId);
+        }
+
         List<RegistroCompra> historial = registroCompraRepository.listarPorProductoId(productoId);
 
         if (historial.size() < 2) {
@@ -70,5 +81,17 @@ public class RegistroCompraServiceImpl implements RegistroCompraService {
         double precioAnterior = historial.get(1).getPrecio();
 
         return precioUltimo - precioAnterior;
+    }
+
+    private void validar(RegistroCompra registro) {
+        if (registro.getPrecio() <= 0) {
+            throw new IllegalArgumentException("El precio debe ser mayor a cero");
+        }
+        if (registro.getFecha().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de compra no puede ser futura");
+        }
+        if (productoRepository.obtenerPorId(registro.getProductoId()) == null) {
+            throw new IllegalArgumentException("El producto con id " + registro.getProductoId() + " no existe");
+        }
     }
 }

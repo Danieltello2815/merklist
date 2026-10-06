@@ -62,7 +62,7 @@ public class RegistroCompraRepositoryImpl implements RegistroCompraRepository {
     @Override
     public List<RegistroCompra> listarPorProductoId(int productoId) {
         List<RegistroCompra> lista = new ArrayList<>();
-        String sql = "SELECT id, precio, fecha, lugar_compra, producto_id FROM registro_compra WHERE producto_id = ? ORDER BY fecha DESC";
+        String sql = "SELECT id, precio, fecha, lugar_compra, producto_id FROM registro_compra WHERE producto_id = ? ORDER BY fecha DESC, id DESC";
 
         try (Connection connection = DriverManager.getConnection(url, usuario, password);
              PreparedStatement statement = connection.prepareStatement(sql)) {
