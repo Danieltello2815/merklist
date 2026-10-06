@@ -4,6 +4,7 @@ import com.merklist.merklist.excepcion.RecursoNoEncontradoException;
 import com.merklist.merklist.modelo.Producto;
 import com.merklist.merklist.repositorio.ProductoRepository;
 import org.springframework.stereotype.Service;
+import com.merklist.merklist.repositorio.TipoProductoRepository;
 
 import java.util.List;
 
@@ -11,9 +12,12 @@ import java.util.List;
 public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
+    private final TipoProductoRepository tipoProductoRepository;
 
-    public ProductoServiceImpl(ProductoRepository productoRepository) {
+    public ProductoServiceImpl(ProductoRepository productoRepository,
+                               TipoProductoRepository tipoProductoRepository) {
         this.productoRepository = productoRepository;
+        this.tipoProductoRepository = tipoProductoRepository;
     }
 
     @Override
@@ -53,8 +57,10 @@ public class ProductoServiceImpl implements ProductoService {
         if (producto.getNombre() == null || producto.getNombre().isBlank()) {
             throw new IllegalArgumentException("El nombre del producto es obligatorio");
         }
-        if (producto.getTipoProductoId() <= 0) {
-            throw new IllegalArgumentException("Debes indicar un tipo de producto válido");
+        if (producto.getTipoProductoId() <= 0
+                || tipoProductoRepository.obtenerPorId(producto.getTipoProductoId()) == null) {
+            throw new IllegalArgumentException(
+                    "El tipo de producto con id " + producto.getTipoProductoId() + " no existe");
         }
     }
 }

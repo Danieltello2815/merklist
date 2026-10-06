@@ -5,6 +5,7 @@ import com.merklist.merklist.excepcion.RecursoNoEncontradoException;
 import com.merklist.merklist.modelo.TipoProducto;
 import com.merklist.merklist.repositorio.TipoProductoRepository;
 import org.springframework.stereotype.Service;
+import com.merklist.merklist.excepcion.OperacionNoPermitidaException;
 
 import java.util.List;
 
@@ -58,6 +59,10 @@ public class TipoProductoServiceImpl implements TipoProductoService {
     @Override
     public void eliminar(int id) {
         obtenerPorId(id); // lanza 404 si no existe
+        if (tipoProductoRepository.tieneProductosAsociados(id)) {
+            throw new OperacionNoPermitidaException(
+                    "No se puede eliminar el tipo de producto con id " + id + " porque tiene productos asociados");
+        }
         tipoProductoRepository.eliminar(id);
     }
 
