@@ -83,6 +83,24 @@ public class TipoProductoRepositoryImpl implements TipoProductoRepository {
     }
 
     @Override
+    public boolean tieneProductosAsociados(int id) {
+        String sql = "SELECT COUNT(*) FROM producto WHERE tipo_producto_id = ?";
+
+        try (Connection connection = DriverManager.getConnection(url, usuario, password);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al verificar productos del tipo con id " + id, e);
+        }
+    }
+
+    @Override
     public TipoProducto crear(TipoProducto tipoProducto) {
         String sql = "INSERT INTO tipo_producto (nombre) VALUES (?)";
 
