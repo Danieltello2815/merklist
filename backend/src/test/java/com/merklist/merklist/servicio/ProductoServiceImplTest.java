@@ -35,7 +35,6 @@ public class ProductoServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        // Configuramos datos ficticios que se ejecutarán antes de cada prueba
         tipoProductoPrueba = new TipoProducto();
         tipoProductoPrueba.setId(1);
         tipoProductoPrueba.setNombre("Lácteos");
@@ -79,7 +78,6 @@ public class ProductoServiceImplTest {
 
     @Test
     void crear_ConDatosValidos_DebeCrearProducto() {
-        // Simulamos que el tipo de producto existe y la BD retorna el producto creado
         when(tipoProductoRepository.obtenerPorId(1)).thenReturn(tipoProductoPrueba);
         when(productoRepository.crear(any(Producto.class))).thenReturn(productoPrueba);
 
@@ -98,7 +96,6 @@ public class ProductoServiceImplTest {
             productoService.crear(productoPrueba);
         });
 
-        // Verificamos que NUNCA se llame a la base de datos si falla la validación
         verify(productoRepository, never()).crear(any());
     }
 

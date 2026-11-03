@@ -70,7 +70,7 @@ public class RegistroCompraServiceImplTest {
     }
 
     @Test
-    void obtenerPorId_КогдаNoExiste_DebeLanzarExcepcion() {
+    void obtenerPorId_CuandoNoExiste_DebeLanzarExcepcion() {
         when(registroCompraRepository.obtenerPorId(99)).thenReturn(null);
 
         assertThrows(RecursoNoEncontradoException.class, () -> {
