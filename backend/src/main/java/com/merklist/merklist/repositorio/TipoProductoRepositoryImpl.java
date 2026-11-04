@@ -66,7 +66,7 @@ public class TipoProductoRepositoryImpl implements TipoProductoRepository {
 
     @Override
     public boolean existePorNombre(String nombre) {
-        String sql = "SELECT COUNT(*) FROM tipo_producto WHERE LOWER(nombre) = LOWER(?)";
+        String sql = "SELECT COUNT(id) FROM tipo_producto WHERE LOWER(nombre) = LOWER(?)";
 
         try (Connection connection = DriverManager.getConnection(url, usuario, password);
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -84,7 +84,7 @@ public class TipoProductoRepositoryImpl implements TipoProductoRepository {
 
     @Override
     public boolean tieneProductosAsociados(int id) {
-        String sql = "SELECT COUNT(*) FROM producto WHERE tipo_producto_id = ?";
+        String sql = "SELECT COUNT(id) FROM producto WHERE tipo_producto_id = ?";
 
         try (Connection connection = DriverManager.getConnection(url, usuario, password);
              PreparedStatement statement = connection.prepareStatement(sql)) {
